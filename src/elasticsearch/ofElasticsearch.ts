@@ -2,9 +2,9 @@ import { Model } from '@burand/functions/firestore';
 
 import { Document } from '../interfaces/Document.js';
 
-export function ofElasticsearch<TData, THit extends Model>(hit: Document<THit>): TData {
+export function ofElasticsearch<T extends Model>(hit: Document<T>): T {
   return {
     ...hit._source,
     id: hit._id
-  } as TData;
+  } as T;
 }
