@@ -1,0 +1,6 @@
+{
+  "extends": "@burand/eslint-config-functions",
+  "rules": {
+    "no-restricted-syntax": "off"
+  }
+}
