@@ -2,6 +2,8 @@ import { Model } from '@burand/functions/firestore';
 import got, { Got } from 'got';
 import { env } from 'node:process';
 
+import { withPrefix } from './withPrefix.js';
+
 export abstract class ElasticIndexAbstract<T extends Model> {
   protected api: Got;
 
@@ -18,7 +20,13 @@ export abstract class ElasticIndexAbstract<T extends Model> {
     });
   }
 
-  public abstract create(): Promise<void>;
+  public abstract _mapping(): unknown;
+
+  public async create(): Promise<void> {
+    await this.api.put(withPrefix(this.collection), {
+      json: this._mapping()
+    });
+  }
 
   public async bulkIndex(items: T[]): Promise<void> {
     const body = items
@@ -27,7 +35,7 @@ export abstract class ElasticIndexAbstract<T extends Model> {
           JSON.stringify({
             index: {
               _id: post.id,
-              _index: `${env.ELASTIC_PREFIX}-${this.collection}`
+              _index: withPrefix(this.collection)
             }
           }),
           JSON.stringify(post)
@@ -44,6 +52,6 @@ export abstract class ElasticIndexAbstract<T extends Model> {
   }
 
   public async delete(): Promise<void> {
-    await this.api.delete(`${env.ELASTIC_PREFIX}-${this.collection}`);
+    await this.api.delete(withPrefix(this.collection));
   }
 }

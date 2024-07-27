@@ -4,7 +4,8 @@ export declare abstract class ElasticIndexAbstract<T extends Model> {
     protected collection: string;
     protected api: Got;
     constructor(collection: string);
-    abstract create(): Promise<void>;
+    abstract _mapping(): unknown;
+    create(): Promise<void>;
     bulkIndex(items: T[]): Promise<void>;
     delete(): Promise<void>;
 }

@@ -5,13 +5,14 @@ import { env } from 'node:process';
 import { DocumentResponse } from '../interfaces/DocumentResponse.js';
 import { SearchResponse } from '../interfaces/SearchResponse.js';
 import { ofElasticsearch } from './ofElasticsearch.js';
+import { withPrefix } from './withPrefix.js';
 
 export class ElasticAbstract<T extends Model> {
   protected api: Got;
 
   constructor(protected collection: string) {
     this.api = got.extend({
-      prefixUrl: `${env.ELASTIC_URL}/${env.ELASTIC_PREFIX}-${this.collection}`,
+      prefixUrl: `${env.ELASTIC_URL}/${withPrefix(this.collection)}`,
       headers: {
         authorization: `${env.ELASTIC_AUTH}`
       },
