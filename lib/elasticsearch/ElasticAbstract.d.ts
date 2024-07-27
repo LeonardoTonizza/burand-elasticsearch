@@ -1,8 +1,9 @@
 import { Model } from '@burand/functions/firestore';
+import { Got } from 'got';
 import { SearchResponse } from '../interfaces/SearchResponse.js';
 export declare class ElasticAbstract<T extends Model> {
-    private collection;
-    private api;
+    protected collection: string;
+    protected api: Got;
     constructor(collection: string);
     add({ id, ...rest }: T): Promise<void>;
     update({ id, ...doc }: T): Promise<void>;

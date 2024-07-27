@@ -3,9 +3,9 @@ import got, { Got } from 'got';
 import { env } from 'node:process';
 
 export abstract class ElasticIndexAbstract<T extends Model> {
-  private api: Got;
+  protected api: Got;
 
-  constructor(private collection: string) {
+  constructor(protected collection: string) {
     this.api = got.extend({
       prefixUrl: env.ELASTIC_URL,
       headers: {
@@ -18,9 +18,9 @@ export abstract class ElasticIndexAbstract<T extends Model> {
     });
   }
 
-  abstract create(): Promise<void>;
+  public abstract create(): Promise<void>;
 
-  async bulkIndex(items: T[]): Promise<void> {
+  public async bulkIndex(items: T[]): Promise<void> {
     const body = items
       .flatMap(post => {
         return [
@@ -43,7 +43,7 @@ export abstract class ElasticIndexAbstract<T extends Model> {
     });
   }
 
-  async delete(): Promise<void> {
+  public async delete(): Promise<void> {
     await this.api.delete(`${env.ELASTIC_PREFIX}-${this.collection}`);
   }
 }

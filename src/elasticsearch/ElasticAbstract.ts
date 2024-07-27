@@ -7,9 +7,9 @@ import { SearchResponse } from '../interfaces/SearchResponse.js';
 import { ofElasticsearch } from './ofElasticsearch.js';
 
 export class ElasticAbstract<T extends Model> {
-  private api: Got;
+  protected api: Got;
 
-  constructor(private collection: string) {
+  constructor(protected collection: string) {
     this.api = got.extend({
       prefixUrl: `${env.ELASTIC_URL}/${env.ELASTIC_PREFIX}-${this.collection}`,
       headers: {
@@ -34,7 +34,7 @@ export class ElasticAbstract<T extends Model> {
     });
   }
 
-  async updateByQuery(query: unknown, script: unknown): Promise<void> {
+  public async updateByQuery(query: unknown, script: unknown): Promise<void> {
     await this.api.post('_update_by_query', {
       searchParams: {
         conflicts: 'proceed'
